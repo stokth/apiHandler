@@ -1,4 +1,4 @@
-package main
+package lesNick
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func main2() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Hello, world!")     // принт в консоль
 		d, err := ioutil.ReadAll(r.Body) // читаем тело запроса
