@@ -2,31 +2,25 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
-	"strconv"
 )
 
-var counter int
-
-func GetHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		fmt.Fprintln(w, "Counter = ", strconv.Itoa(counter))
-	} else {
-		fmt.Fprintln(w, "Method not allowed")
-	}
-}
-
-func PostHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		counter++
-		fmt.Fprintln(w, "Counter incremented")
-	} else {
-		fmt.Fprintln(w, "Method not allowed")
-	}
-}
-
 func main() {
-	http.HandleFunc("/get", GetHandler)
-	http.HandleFunc("/post", PostHandler)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Hello, world!")     // принт в консоль
+		d, err := ioutil.ReadAll(r.Body) // читаем тело запроса
+
+		// Проверяем ошибки чтения тела запроса
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusBadRequest)
+			return
+		}
+
+		// Если все хорошо, печатаем тело запроса в консоль
+		fmt.Printf("Received request with body: %s", d)
+	})
+
 	http.ListenAndServe("localhost:8080", nil)
 }
